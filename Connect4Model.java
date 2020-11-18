@@ -22,6 +22,7 @@ public class Connect4Model extends Observable{
 	 * 2 - red win
 	 * 3 - tie
 	 * 4 - invalid move
+	 * 
 	 * @param column
 	 */
 	public void add(int column) {

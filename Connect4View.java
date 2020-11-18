@@ -33,8 +33,8 @@ public class Connect4View extends Application implements Observer {
 		background.getChildren().add(canvas);
 		pane.getChildren().add(background);
 		background.setStyle("-fx-background-color: blue");
-		//pane.setHgap(8);
-		//pane.setVgap(8);
+		pane.setHgap(8);
+		pane.setVgap(8);
 		setCircles(pane);
 		Scene scene = new Scene(pane, 344, 296);
 		primaryStage.setScene(scene);
