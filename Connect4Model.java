@@ -2,11 +2,11 @@ import java.util.Observable;
 
 public class Connect4Model extends Observable{
 	
-	private Pieces[][] board;
+	private Connect4MoveMessage[][] board;
 	private int turn = 1; // 1 = yellow, 2 = red
 
 	public Connect4Model() {
-		board = new Pieces[7][6];
+		board = new Connect4MoveMessage[7][6];
 		// Initialize board to have null in every position
 		for(int x = 0; x < 7; x++) {
 			for(int i = 0; i < 6; i++) {
@@ -15,6 +15,15 @@ public class Connect4Model extends Observable{
 		}
 	}
 	
+	/**
+	 * Probably going to change return statement to 
+	 * 0 - valid move
+	 * 1 - yellow win
+	 * 2 - red win
+	 * 3 - tie
+	 * 4 - invalid move
+	 * @param column
+	 */
 	public void add(int column) {
 		if(board[column][5] != null) {
 			System.out.println("That column is full");
@@ -24,7 +33,7 @@ public class Connect4Model extends Observable{
 			while(board[column][row] != null) {
 				row++;
 			}
-			Pieces piece = new Pieces(row, column, turn);
+			Connect4MoveMessage piece = new Connect4MoveMessage(row, column, turn);
 			board[column][row] = piece;
 			if(winCheck(column, row)) {
 				if(turn == 1) {
@@ -66,7 +75,7 @@ public class Connect4Model extends Observable{
 	 * @param row
 	 */
 	private boolean winCheck(int column, int row) {
-		if(downwardsCheck(column, row, board[column][row].color) || sidewaysCheck(column, row, board[column][row].color) || diagonalCheck(column, row, board[column][row].color)) {
+		if(downwardsCheck(column, row, board[column][row].getColor()) || sidewaysCheck(column, row, board[column][row].getColor()) || diagonalCheck(column, row, board[column][row].getColor())) {
 			return true;
 		}
 		return false;
@@ -76,7 +85,7 @@ public class Connect4Model extends Observable{
 		// if row < 3, then height can't reach 4, so skip check
 		if(row > 2) {
 			int count = 1;
-			while(board[column][row] != null && board[column][row].color == color) {
+			while(board[column][row] != null && board[column][row].getColor() == color) {
 				if(count == 4) {
 					return true;
 				}
@@ -91,7 +100,7 @@ public class Connect4Model extends Observable{
 		int count = 1;
 		int col = column;
 		// Check the pieces to the left of the given position
-		while(col >= 0 && board[col][row] != null && board[col][row].color == color) {
+		while(col >= 0 && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -101,7 +110,7 @@ public class Connect4Model extends Observable{
 		// Move col to the right one since we already recorded a count for column's original pos
 		col = column + 1;
 		// Check the pieces to the right of the given position
-		while(col < 7 && board[col][row] != null && board[col][row].color == color) {
+		while(col < 7 && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -117,7 +126,7 @@ public class Connect4Model extends Observable{
 		int row = row2;
 		// Bottom left to Top right diagonal check
 		// Down-left diagonal check
-		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].color == color) {
+		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -129,7 +138,7 @@ public class Connect4Model extends Observable{
 		col = column2 + 1;
 		row = row2 + 1;
 		// Top-right diagonal check
-		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].color == color) {
+		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -145,7 +154,7 @@ public class Connect4Model extends Observable{
 		row = row2;
 		// Top left to bottom right diagonal check
 		// Down-left diagonal check
-		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].color == color) {
+		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -157,7 +166,7 @@ public class Connect4Model extends Observable{
 		col = column2 - 1;
 		row = row2 + 1;
 		// Top-right diagonal check
-		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].color == color) {
+		while((col < 7 && row < 6) && (col >= 0 && row >= 0) && board[col][row] != null && board[col][row].getColor() == color) {
 			if(count == 4) {
 				return true;
 			}
@@ -167,27 +176,4 @@ public class Connect4Model extends Observable{
 		}
 		return false;
 	}
-
-	private class Pieces{
-		public int row;
-		public int col;
-		public int color;
-		
-		
-		public Pieces(int row, int column, int color) {
-			this.row = row;
-			this.col = column;
-			this.color = color;
-		}
-		
-		public int getRow(){return row;}
-		public int getCol() {return col;}
-		public int getColor() {return color;}
-		
-	}
-
-	public int get(int col, int row) {
-		return board[col][row].color;
-	}
-	
 }

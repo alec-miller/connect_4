@@ -17,4 +17,5 @@ public class Connect4MoveMessage implements Serializable {
 	public int getRow() { return row; }
 	public int getColumn() { return col; }
 	public int getColor() { return color; }
+	
 }
