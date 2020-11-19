@@ -37,9 +37,9 @@ public class Connect4View extends Application implements Observer {
 	public void update(Observable o, Object arg) {
 		
 		if(((Connect4MoveMessage) arg).getColor() == ((Connect4MoveMessage) arg).RED) {
-			circles.get(((Connect4MoveMessage) arg).getRow()).get(((Connect4MoveMessage) arg).getColumn()).setFill(javafx.scene.paint.Color.RED);
+			circles.get(NUM_ROWS - 1 - ((Connect4MoveMessage) arg).getRow()).get(((Connect4MoveMessage) arg).getColumn()).setFill(javafx.scene.paint.Color.RED);
 		} else {
-			circles.get(((Connect4MoveMessage) arg).getRow()).get(((Connect4MoveMessage) arg).getColumn()).setFill(javafx.scene.paint.Color.YELLOW);
+			circles.get(NUM_ROWS - 1 -((Connect4MoveMessage) arg).getRow()).get(((Connect4MoveMessage) arg).getColumn()).setFill(javafx.scene.paint.Color.YELLOW);
 		}
 		
 	}
