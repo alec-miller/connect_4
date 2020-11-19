@@ -35,6 +35,9 @@ public class Connect4Model extends Observable{
 				row++;
 			}
 			Connect4MoveMessage piece = new Connect4MoveMessage(row, column, turn);
+			this.setChanged();
+			this.notifyObservers(piece);
+			System.out.println(this.countObservers());
 			board[column][row] = piece;
 			if(winCheck(column, row)) {
 				if(turn == 1) {
