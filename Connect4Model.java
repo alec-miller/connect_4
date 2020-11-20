@@ -225,6 +225,7 @@ public class Connect4Model extends Observable{
 	
 	public void reset() {
 		board = new Connect4MoveMessage[7][6];
+		turn = 1;
 		// Initialize board to have null in every position
 		for(int x = 0; x < 7; x++) {
 			for(int i = 0; i < 6; i++) {
