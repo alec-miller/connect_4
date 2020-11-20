@@ -9,6 +9,15 @@ public class Connect4Controller {
 		this.model = model;
 	}
 	
+	/**
+	 * Add a token of the correct color to the column the user clicked on.
+	 * 
+	 * @param click - a MouseEvent of the click that the user just made
+	 * @param width - the width of the view of the board
+	 * @param numColumns - the number of column (7 in connect 4)
+	 * 
+	 * @return an int that the view uses to determine next step
+	 */
 	public int makeHumanMove(MouseEvent click, int width, int numColumns) {
 		if(click.getSceneX() < width / numColumns) {
 			return model.add(0);
@@ -28,6 +37,10 @@ public class Connect4Controller {
 		return -1;
 	}
 	
+	/**
+	 * This function makes a random legal move
+	 * 
+	 */
 	public void makeComputerMove() {
 		while(true) {
 			int column = (int) (Math.random() * 5);

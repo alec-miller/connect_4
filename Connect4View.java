@@ -33,6 +33,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+/**
+ * 
+ * @author Taylor McLaughlin and Alec Miller
+ * This class is the view of this MVC connect 4 game.
+ * This creates a board that the user can interact with by clicking on one of the seven columns.  The 
+ * next move will then be made by another person running another instance of the program, or a computer.
+ * The user can create and play as many games as they want.
+ */
+
 public class Connect4View extends Application implements Observer {
 	
 	private Connect4Model model = new Connect4Model();
@@ -49,12 +58,23 @@ public class Connect4View extends Application implements Observer {
 	final static int CIRCLE_SIZE = 20;
 	final int PANE_WIDTH = 344;
 	final int PANE_HEIGHT = 296;
-
+	
+	/**
+	 * setup initial white tokens for board and call launch
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		setupInitialCircles();
 		launch(args);
 	}
 	
+	/**
+	 * Update the view when the model has changed
+	 * 
+	 * @param o observable, not used in this case
+	 * @param arg - a Connect4MoveMessage that contains the color and location of token that has changed
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		
@@ -65,7 +85,13 @@ public class Connect4View extends Application implements Observer {
 		}
 		
 	}
-
+	
+	/**
+	 * Builds view that the user interacts with.
+	 * Creates a menu bar on top, with the board in the center of the screen
+	 * 
+	 * @param primaryStage
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane root = new BorderPane();
@@ -127,13 +153,25 @@ public class Connect4View extends Application implements Observer {
 
         return menuBar;
 	}
-
+	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param pane
+	 * @param string
+	 */
 	protected void invalidPopup(GridPane pane, String string) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setContentText(string);
 		alert.show();
 	}
-
+	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param pane
+	 * @param string
+	 */
 	protected void tiePopup(GridPane pane, String string) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setContentText(string);
@@ -141,7 +179,13 @@ public class Connect4View extends Application implements Observer {
 		alert.show();
 		pane.setDisable(true);
 	}
-
+	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param pane
+	 * @param string
+	 */
 	private void winPopup(GridPane pane, String team) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setContentText(team + " has won!");
@@ -150,35 +194,42 @@ public class Connect4View extends Application implements Observer {
 		pane.setDisable(true);
 	}
 	
+	/**
+	 * This creates the board based on the local 2d array of circles which is updated by update
+	 * 
+	 * @param pane - a GridPane that stores the tokens of the board
+	 */
 	private void setCircles(GridPane pane) {
-		// make sure each column is one seventh of the width of the pane
-//		for (int i = 0; i < NUM_COLS; i++) {
-//            ColumnConstraints colConst = new ColumnConstraints();
-//            colConst.setPercentWidth(100.0 / NUM_COLS);
-//            pane.getColumnConstraints().add(colConst);
-//        }
-//		// make sure each row is one sixth of the width of the pane
-//        for (int i = 0; i < NUM_ROWS; i++) {
-//            RowConstraints rowConst = new RowConstraints();
-//            rowConst.setPercentHeight(100.0 / NUM_ROWS);
-//            pane.getRowConstraints().add(rowConst);         
-//        }
 		for(int y = 0; y < NUM_ROWS; y++) {
 			for(int x = 0; x < NUM_COLS; x++) {
 				pane.add(circles.get(y).get(x), x, y);
 			}
 		}
 	}
-
+	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param model
+	 */
 	public void giveModel(Connect4Model model) {
 		this.model = model;
 		this.model.addObserver(this);
 	}
 	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param controller
+	 */
 	public void giveController(Connect4Controller controller) {
 		this.controller = controller;
 	}
 	
+	/**
+	 * Builds a 2d array of white circles that represent the board.
+	 * Mdifies local variable circles
+	 */
 	public static void setupInitialCircles() {
 		for(int i = 0; i < NUM_ROWS; i++) {
 			ArrayList<Circle> circlesRow = new ArrayList<Circle>();
@@ -191,10 +242,20 @@ public class Connect4View extends Application implements Observer {
 		}
 	}
 	
+	/**
+	 * Create a new Connect4Menu();
+	 */
 	public void openMenu() {
 		Connect4Menu menu = new Connect4Menu();
 	}
 	
+	/**
+	 * 
+	 * @author Taylor McLaughlin
+	 * This class is the creates the screen that the user uses to create a new game.
+	 * The screen created allows the user to create another game either with a human or a computer.  The
+	 * user then decide if they are the server or the client and create the new game
+	 */
 	private class Connect4Menu extends Stage {
 		public Connect4Menu() {
 			//this.initModality(APPLICATION_MODAL);
@@ -240,6 +301,13 @@ public class Connect4View extends Application implements Observer {
 			
 		}
 	}
+	
+	/**
+	 * Comment this whenever you get a chance
+	 * 
+	 * @param pane
+	 * @param string
+	 */
 	EventHandler<WindowEvent> message = new EventHandler<WindowEvent>() { 
 	public void handle(WindowEvent e) 
 	{ 
