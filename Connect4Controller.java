@@ -9,29 +9,23 @@ public class Connect4Controller {
 		this.model = model;
 	}
 	
-	public void makeHumanMove(MouseEvent click, int width, int numColumns) {
+	public int makeHumanMove(MouseEvent click, int width, int numColumns) {
 		if(click.getSceneX() < width / numColumns) {
-			System.out.println("0");
-			model.add(0);
+			return model.add(0);
 		} else if(click.getSceneX() < width / numColumns * 2) {
-			System.out.println("1");
-			model.add(1);
+			return model.add(1);
 		} else if(click.getSceneX() < width / numColumns * 3) {
-			System.out.println("2");
-			model.add(2);
+			return model.add(2);
 		} else if(click.getSceneX() < width / numColumns * 4) {
-			System.out.println("3");
-			model.add(3);
+			return model.add(3);
 		} else if(click.getSceneX() < width / numColumns * 5) {
-			System.out.println("4");
-			model.add(4);
+			return model.add(4);
 		} else if(click.getSceneX() < width / numColumns * 6) {
-			System.out.println("5");
-			model.add(5);
+			return model.add(5);
 		} else if(click.getSceneX() < width / numColumns * 7) {
-			System.out.println("6");
-			model.add(6);
+			return model.add(6);
 		}
+		return -1;
 	}
 	
 	public void makeComputerMove() {

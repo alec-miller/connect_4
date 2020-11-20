@@ -3,6 +3,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,16 +16,22 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class Connect4View extends Application implements Observer {
 	
@@ -32,6 +39,10 @@ public class Connect4View extends Application implements Observer {
 	private Connect4Controller controller = new Connect4Controller(model);
 	private static String[] arguments;
 	private static ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
+	private Button yellowWin = new Button("Yellow Wins!");
+	private Button redWin = new Button("Red Wins!");
+	private Button tie = new Button("It's a tie!");
+	private Alert a = new Alert(AlertType.NONE);
 	
 	final static int NUM_ROWS = 6;
 	final static int NUM_COLS = 7;
@@ -57,6 +68,7 @@ public class Connect4View extends Application implements Observer {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		BorderPane root = new BorderPane();
 		model.addObserver(this);  // CHANGE THIS
 		primaryStage.setTitle("Connect 4");
 		Menu file = new Menu("File");
@@ -81,18 +93,61 @@ public class Connect4View extends Application implements Observer {
 		pane.setStyle("-fx-background-color: blue;" + "-fx-border-insets: 8;");
 		pane.setOnMousePressed(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent me) {
-				controller.makeHumanMove(me, PANE_WIDTH, NUM_COLS);
-			}
+				int val = controller.makeHumanMove(me, PANE_WIDTH, NUM_COLS);
+				if(val == 1) {
+					winPopup(pane, "Yellow");
+				}else if(val == 2) {
+					winPopup(pane, "Red");
+				}else if(val == 3) {
+					tiePopup(pane, "It's a tie!");
+				}else if(val == 4) {
+					invalidPopup(pane, "Column full, pick somewhere else!");
+				}
+			}			
 		});
 		setCircles(pane);
-		BorderPane root = new BorderPane();
 		root.setPrefSize(360,312);
 		root.setTop(vb);
 		root.setCenter(pane);
 		Scene scene = new Scene(root, 344, 328);
+//		root.setCenter(pane);
+//		root.setTop(addMenu());
+//		Scene scene = new Scene(pane, 360, 312);
+//		Scene scene = new Scene(root, PANE_WIDTH, PANE_HEIGHT);
 		
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	private MenuBar addMenu() {
+		Menu menu = new Menu("File");
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().add(menu);
+        //VBox root = new VBox(menuBar);
+
+        return menuBar;
+	}
+
+	protected void invalidPopup(GridPane pane, String string) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setContentText(string);
+		alert.show();
+	}
+
+	protected void tiePopup(GridPane pane, String string) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setContentText(string);
+		alert.setHeaderText("Game Over!");
+		alert.show();
+		pane.setDisable(true);
+	}
+
+	private void winPopup(GridPane pane, String team) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setContentText(team + " has won!");
+		alert.setHeaderText("Game Over!");
+		alert.show();
+		pane.setDisable(true);
 	}
 	
 	private void setCircles(GridPane pane) {
@@ -121,10 +176,7 @@ public class Connect4View extends Application implements Observer {
 	}
 	
 	public void giveController(Connect4Controller controller) {
-		System.out.println("this running");
-		System.out.println(this.controller);
 		this.controller = controller;
-		System.out.println(this.controller);
 	}
 	
 	public static void setupInitialCircles() {
@@ -188,5 +240,15 @@ public class Connect4View extends Application implements Observer {
 			
 		}
 	}
+	EventHandler<WindowEvent> message = new EventHandler<WindowEvent>() { 
+	public void handle(WindowEvent e) 
+	{ 
+	   // set alert type 
+	   a.setAlertType(AlertType.INFORMATION); 
+	
+	   // show the dialog 
+	   a.show(); 
+	} 
+	};
 
 }

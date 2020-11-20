@@ -16,7 +16,6 @@ public class Connect4Model extends Observable{
 	}
 	
 	/**
-	 * Probably going to change return statement to 
 	 * 0 - valid move
 	 * 1 - yellow win
 	 * 2 - red win
@@ -25,9 +24,10 @@ public class Connect4Model extends Observable{
 	 * 
 	 * @param column
 	 */
-	public void add(int column) {
+
+	public int add(int column) {
 		if(isValidMove(column)) {
-			System.out.println("That column is full");
+			return 4;
 		}else {
 			int row = 0;
 			// find next open row in the given column
@@ -37,17 +37,16 @@ public class Connect4Model extends Observable{
 			Connect4MoveMessage piece = new Connect4MoveMessage(row, column, turn);
 			this.setChanged();
 			this.notifyObservers(piece);
-			System.out.println(this.countObservers());
 			board[column][row] = piece;
 			if(winCheck(column, row)) {
 				if(turn == 1) {
-					System.out.println("Yellow wins");
+					return 1;
 				}else {
-					System.out.println("Red wins");
+					return 2;
 				}
 			}else {
 				if(catCheck()) {
-					System.out.println("Tie");
+					return 3;
 				}else {
 					if(turn == 1) {
 						turn = 2;
@@ -57,6 +56,7 @@ public class Connect4Model extends Observable{
 				}
 			}
 		}
+		return 0;
 	}
 	
 	public boolean isValidMove(int column) {
