@@ -48,12 +48,6 @@ public class Connect4Controller {
 		int column = ThreadLocalRandom.current().nextInt(0, 7);
 		while(model.add(column) == 4) {
 			column = ThreadLocalRandom.current().nextInt(0, 7);
-//			int column = (int) (Math.random() * 5);
-			System.out.println(model.isValidMove(column));
-			if(model.isValidMove(column)) {
-				model.add(column);
-				break;
-			}
 		}
 	}
 

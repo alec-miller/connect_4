@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -49,7 +54,7 @@ public class Connect4View extends Application implements Observer {
 	private static String[] arguments;
 	private static ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private Alert a;
-	private int serverOrClient = 0; // 0 = server, 1 = client
+	private static int serverOrClient = -1; // 0 = server, 1 = client
 	private int humanOrComputer = 0; // 0 = human, 1 = computer
 	private int serverNum;
 	private int portNum;
@@ -66,6 +71,9 @@ public class Connect4View extends Application implements Observer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		if(serverOrClient == 0) {
+			server();
+		}
 		launch(args);
 	}
 	
@@ -94,6 +102,7 @@ public class Connect4View extends Application implements Observer {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.model.addObserver(this);
 		setupInitialCircles();
 		BorderPane root = new BorderPane();
 		a  = new Alert(AlertType.NONE);
@@ -138,6 +147,9 @@ public class Connect4View extends Application implements Observer {
 		Scene scene = new Scene(root, 344, 328);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		if(serverOrClient == 0 && humanOrComputer == 1) {
+			controller.makeComputerMove();
+		}
 	}
 
 	/**
@@ -191,25 +203,6 @@ public class Connect4View extends Application implements Observer {
 				pane.add(circles.get(y).get(x), x, y);
 			}
 		}
-	}
-	
-	/**
-	 * Gives the model to the view
-	 * 
-	 * @param model
-	 */
-	public void giveModel(Connect4Model model) {
-		this.model = model;
-		this.model.addObserver(this);
-	}
-	
-	/**
-	 * Gives the controller to the view
-	 * 
-	 * @param controller
-	 */
-	public void giveController(Connect4Controller controller) {
-		this.controller = controller;
 	}
 	
 	/**
@@ -390,5 +383,28 @@ public class Connect4View extends Application implements Observer {
 	   a.show(); 
 	} 
 	};
+	
+	private static void server() {
+		try {
+			ServerSocket server = new ServerSocket(4000);
+			Socket connection  = server.accept();
+			ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
+			ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
+			connection.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void client() {
+		try {
+			Socket server = new Socket("localhost", 4000);
+			ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
+			ObjectInputStream input = new ObjectInputStream(server.getInputStream());
+			server.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

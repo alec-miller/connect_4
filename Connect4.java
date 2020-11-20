@@ -1,13 +1,16 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+
+import javafx.application.Application;
 
 public class Connect4 {
 
 	public static void main(String args[]) {
-		Connect4Model model = new Connect4Model();
-		Connect4Controller controller = new Connect4Controller(model);
-		Connect4View view = new Connect4View();
-		view.giveModel(model);
-		view.giveController(controller);
-		view.main(null);
+		Application.launch(Connect4View.class, args);
 	}
 	
 }
