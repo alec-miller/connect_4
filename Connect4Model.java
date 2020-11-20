@@ -26,7 +26,7 @@ public class Connect4Model extends Observable{
 	 * @param column
 	 */
 	public void add(int column) {
-		if(board[column][5] != null) {
+		if(isValidMove(column)) {
 			System.out.println("That column is full");
 		}else {
 			int row = 0;
@@ -57,6 +57,10 @@ public class Connect4Model extends Observable{
 				}
 			}
 		}
+	}
+	
+	public boolean isValidMove(int column) {
+		return board[column][5] != null;
 	}
 
 	/**

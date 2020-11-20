@@ -33,5 +33,15 @@ public class Connect4Controller {
 			model.add(6);
 		}
 	}
+	
+	public void makeComputerMove() {
+		while(true) {
+			int column = (int) (Math.random() * 5);
+			if(model.isValidMove(column)) {
+				model.add(column);
+				break;
+			}
+		}
+	}
 
 }
