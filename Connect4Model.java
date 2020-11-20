@@ -1,3 +1,11 @@
+/**
+ * @author Alec Miller and Taylor McLaughlin
+ * The model for the connect4 game.
+ * This class contains the logic behind the game, it has a board to check every position,
+ * place new pieces, and determine whether or not a person has won.
+ * 
+ */
+
 import java.util.Observable;
 
 public class Connect4Model extends Observable{
@@ -59,6 +67,12 @@ public class Connect4Model extends Observable{
 		return 0;
 	}
 	
+	/**
+	 * Checks if a move is valid
+	 * 
+	 * @param column
+	 * @return true/false
+	 */
 	public boolean isValidMove(int column) {
 		return board[column][5] != null;
 	}
@@ -89,6 +103,14 @@ public class Connect4Model extends Observable{
 		return false;
 	}
 	
+	/**
+	 * From a given row/col, this checks to see if the player has won the game vertically
+	 * 
+	 * @param column
+	 * @param row
+	 * @param color
+	 * @return true/false
+	 */
 	private boolean downwardsCheck(int column, int row, int color) {
 		// if row < 3, then height can't reach 4, so skip check
 		if(row > 2) {
@@ -104,6 +126,14 @@ public class Connect4Model extends Observable{
 		return false;
 	}
 
+	/**
+	 * From a given row/col, this checks to see if the player has won the game horizontally
+	 * 
+	 * @param column
+	 * @param row
+	 * @param color
+	 * @return true/false
+	 */
 	private boolean sidewaysCheck(int column, int row, int color) {
 		int count = 1;
 		int col = column;
@@ -128,6 +158,14 @@ public class Connect4Model extends Observable{
 		return false;
 	}
 
+	/**
+	 * From a given row/col, this checks to see if the player has won the game diagonally
+	 * 
+	 * @param column2
+	 * @param row2
+	 * @param color
+	 * @return true/false
+	 */
 	private boolean diagonalCheck(int column2, int row2, int color) {
 		int count = 1;
 		int col = column2;
@@ -183,5 +221,15 @@ public class Connect4Model extends Observable{
 			count++;
 		}
 		return false;
+	}
+	
+	public void reset() {
+		board = new Connect4MoveMessage[7][6];
+		// Initialize board to have null in every position
+		for(int x = 0; x < 7; x++) {
+			for(int i = 0; i < 6; i++) {
+				board[x][i] = null;
+			}
+		}
 	}
 }
