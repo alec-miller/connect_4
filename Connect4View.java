@@ -380,39 +380,50 @@ public class Connect4View extends Application implements Observer {
 	} 
 	};
 	
+	/**
+	 * Server code
+	 */
 	private void server() {
 		try {
 			ServerSocket server = new ServerSocket(portId);
-			System.out.println("Server started");
+			System.out.println(server.isClosed());
 			Socket connection  = server.accept();
 			System.out.println("Connection accepted");
 			ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
-//			output.writeObject(model);
-//			input.readObject();
+			output.writeObject(model);
+			input.readObject();
 			input.close();
 			output.close();
 			connection.close();
-			//server.close();
+			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
+	/**
+	 * Client side of server
+	 */
 	private void client() {
 		try {
 			Socket server = new Socket(serverId, portId);
 			System.out.println("connected");
 			ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(server.getInputStream());
-//			output.writeObject(model);
-//			input.readObject();
+			output.writeObject(model);
+			input.readObject();
 			input.close();
 			output.close();
 			server.close();
 		} catch(IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
-	}
+    }
 
 }
