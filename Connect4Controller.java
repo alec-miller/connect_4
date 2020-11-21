@@ -1,7 +1,5 @@
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 public class Connect4Controller {

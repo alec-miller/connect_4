@@ -43,13 +43,12 @@ public class Connect4View extends Application implements Observer {
 	
 	private Connect4Model model = new Connect4Model();
 	private Connect4Controller controller = new Connect4Controller(model);
-	private static String[] arguments;
 	private static ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private Alert a;
 	private static int serverOrClient = 0; // 0 = server, 1 = client
 	private int humanOrComputer = 0; // 0 = human, 1 = computer
-	private int serverNum;
-	private int portNum;
+	private String serverId = "localhost";
+	private String portId = "4000";
 	
 	final static int NUM_ROWS = 6;
 	final static int NUM_COLS = 7;
@@ -139,6 +138,7 @@ public class Connect4View extends Application implements Observer {
 		root.setPrefSize(360,312);
 		root.setTop(vb);
 		root.setCenter(pane);
+		System.out.println(serverId + " " + portId);
 		Scene scene = new Scene(root, 344, 328);
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -217,13 +217,6 @@ public class Connect4View extends Application implements Observer {
 	}
 	
 	/**
-	 * Create a new Connect4Menu();
-	 */
-	public void openMenu(Stage stage) {
-		Connect4Menu menu = new Connect4Menu(stage);
-	}
-	
-	/**
 	 * 
 	 * @author Taylor McLaughlin
 	 * This class is the creates the screen that the user uses to create a new game.
@@ -231,6 +224,10 @@ public class Connect4View extends Application implements Observer {
 	 * user then decide if they are the server or the client and create the new game
 	 */
 	private class Connect4Menu extends Stage {
+		
+		TextField serverTextField = new TextField(serverId);
+		TextField portTextField = new TextField(portId);
+		
 		public Connect4Menu(Stage primaryStage) {
 			//this.initModality(APPLICATION_MODAL);
 			Label create = new Label("Create:");
@@ -263,11 +260,9 @@ public class Connect4View extends Application implements Observer {
 			// Server/Port Textfields
 			Label server = new Label("Server");
 			Label port = new Label("Port");
-			TextField serverTextField = new TextField("localhost");
-			TextField portTextField = new TextField("4000");
 			HBox serverRow = new HBox(10); 
 			serverRow.getChildren().addAll(server, serverTextField, port, portTextField);
-			
+	
 			// Okay/Cancel Buttons
 			Button ok = new Button("OK");
 			Button cancel = new Button("Cancel");
@@ -276,16 +271,14 @@ public class Connect4View extends Application implements Observer {
 			setOK(ok, primaryStage);
 			setCancel(cancel);
 			
-			
 			VBox holder = new VBox(10);
 			holder.getChildren().addAll(createRow, playRow, serverRow, buttonRow);
             
 			Scene scene = new Scene(holder, 500, 200);
 			this.setScene(scene);
 			this.show();
-			
 		}
-		
+			
 		/**
 		 * Sets the "Computer" radio button, indicating that a computer is the new opponent
 		 * 
@@ -346,11 +339,15 @@ public class Connect4View extends Application implements Observer {
 		 * 
 		 * @param ok
 		 * @param primaryStage
+		 * @param portTextField2 
+		 * @param serverTextField2 
 		 */
 		private void setOK(Button ok, Stage primaryStage) {
 			ok.setOnAction(event -> {
 	            primaryStage.hide();
 	            try {
+	            	serverId = serverTextField.getText();
+	            	portId = portTextField.getText();
 	            	model.reset();
 	            	circles = new ArrayList<ArrayList<Circle>>();
 					start(new Stage());
