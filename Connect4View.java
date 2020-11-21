@@ -138,7 +138,6 @@ public class Connect4View extends Application implements Observer {
 		root.setPrefSize(360,312);
 		root.setTop(vb);
 		root.setCenter(pane);
-		System.out.println(serverId + " " + portId);
 		Scene scene = new Scene(root, 344, 328);
 		primaryStage.setScene(scene);
 		primaryStage.show();
