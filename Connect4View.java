@@ -8,11 +8,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -25,17 +23,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
@@ -54,7 +46,7 @@ public class Connect4View extends Application implements Observer {
 	private static String[] arguments;
 	private static ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private Alert a;
-	private static int serverOrClient = -1; // 0 = server, 1 = client
+	private static int serverOrClient = 0; // 0 = server, 1 = client
 	private int humanOrComputer = 0; // 0 = human, 1 = computer
 	private int serverNum;
 	private int portNum;
@@ -71,9 +63,6 @@ public class Connect4View extends Application implements Observer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if(serverOrClient == 0) {
-			server();
-		}
 		launch(args);
 	}
 	
@@ -83,6 +72,7 @@ public class Connect4View extends Application implements Observer {
 	 * @param o observable, not used in this case
 	 * @param arg - a Connect4MoveMessage that contains the color and location of token that has changed
 	 */
+	@SuppressWarnings("static-access")
 	@Override
 	public void update(Observable o, Object arg) {
 		
@@ -102,6 +92,11 @@ public class Connect4View extends Application implements Observer {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+//		if(serverOrClient == 0) {
+//			server();
+//		}else if(serverOrClient == 1) {
+//			client();
+//		}
 		this.model.addObserver(this);
 		setupInitialCircles();
 		BorderPane root = new BorderPane();
@@ -111,7 +106,7 @@ public class Connect4View extends Application implements Observer {
 		Menu file = new Menu("File");
 		MenuItem newGame = new MenuItem("New Game");
 		newGame.setOnAction(e -> {
-			openMenu(primaryStage);
+			new Connect4Menu(primaryStage);
 		});
 		file.getItems().add(newGame);
 		MenuBar menuBar = new MenuBar();
@@ -244,6 +239,7 @@ public class Connect4View extends Application implements Observer {
 			// Server/Client Buttons
 			final ToggleGroup createGroup = new ToggleGroup();
 			RadioButton rbServer = new RadioButton("Server");
+			rbServer.setSelected(true);
 			rbServer.setToggleGroup(createGroup);
 			RadioButton rbClient = new RadioButton("Client");
 			rbClient.setToggleGroup(createGroup);
@@ -255,6 +251,7 @@ public class Connect4View extends Application implements Observer {
 			// Human/Computer Buttons
 			final ToggleGroup playGroup = new ToggleGroup();
 			RadioButton rbHuman = new RadioButton("Human");
+			rbHuman.setSelected(true);
 			rbHuman.setToggleGroup(playGroup);
 			RadioButton rbComputer = new RadioButton("Computer");
 			rbComputer.setToggleGroup(playGroup);
@@ -266,8 +263,8 @@ public class Connect4View extends Application implements Observer {
 			// Server/Port Textfields
 			Label server = new Label("Server");
 			Label port = new Label("Port");
-			TextField serverTextField = new TextField();
-			TextField portTextField = new TextField();
+			TextField serverTextField = new TextField("localhost");
+			TextField portTextField = new TextField("4000");
 			HBox serverRow = new HBox(10); 
 			serverRow.getChildren().addAll(server, serverTextField, port, portTextField);
 			
@@ -384,7 +381,7 @@ public class Connect4View extends Application implements Observer {
 	} 
 	};
 	
-	private static void server() {
+	private void server() {
 		try {
 			ServerSocket server = new ServerSocket(4000);
 			Socket connection  = server.accept();
