@@ -45,7 +45,7 @@ public class Connect4View extends Application implements Observer {
 	private Connect4Controller controller = new Connect4Controller(model);
 	private static ArrayList<ArrayList<Circle>> circles = new ArrayList<ArrayList<Circle>>();
 	private Alert a;
-	private static int serverOrClient = 0; // 0 = server, 1 = client
+	private static int serverOrClient = -1; // 0 = server, 1 = client
 	private int humanOrComputer = 0; // 0 = human, 1 = computer
 	private String serverId = "localhost";
 	private String portId = "4000";
@@ -91,11 +91,11 @@ public class Connect4View extends Application implements Observer {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-//		if(serverOrClient == 0) {
-//			server();
-//		}else if(serverOrClient == 1) {
-//			client();
-//		}
+		if(serverOrClient == 0) {
+			server();
+		}else if(serverOrClient == 1) {
+			client();
+		}
 		this.model.addObserver(this);
 		setupInitialCircles();
 		BorderPane root = new BorderPane();
@@ -243,6 +243,7 @@ public class Connect4View extends Application implements Observer {
 			createRow.getChildren().addAll(create, rbServer, rbClient);
 			setServerButton(rbServer);
 			setClientButton(rbClient);
+			serverOrClient = 0;
 			
 			// Human/Computer Buttons
 			final ToggleGroup playGroup = new ToggleGroup();
@@ -383,8 +384,10 @@ public class Connect4View extends Application implements Observer {
 			Socket connection  = server.accept();
 			ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
+			output.writeObject(model);
+			input.readObject();
 			connection.close();
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -394,8 +397,10 @@ public class Connect4View extends Application implements Observer {
 			Socket server = new Socket("localhost", 4000);
 			ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(server.getInputStream());
+			output.writeObject(model);
+			input.readObject();
 			server.close();
-		} catch(IOException e) {
+		} catch(IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
