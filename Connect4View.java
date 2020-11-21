@@ -29,6 +29,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import java.net.*;
+import java.io.*;
 
 /**
  * 
@@ -48,7 +50,7 @@ public class Connect4View extends Application implements Observer {
 	private static int serverOrClient = -1; // 0 = server, 1 = client
 	private int humanOrComputer = 0; // 0 = human, 1 = computer
 	private String serverId = "localhost";
-	private String portId = "4000";
+	private int portId = 4000;
 	
 	final static int NUM_ROWS = 6;
 	final static int NUM_COLS = 7;
@@ -225,7 +227,7 @@ public class Connect4View extends Application implements Observer {
 	private class Connect4Menu extends Stage {
 		
 		TextField serverTextField = new TextField(serverId);
-		TextField portTextField = new TextField(portId);
+		TextField portTextField = new TextField(Integer.toString(portId));
 		
 		public Connect4Menu(Stage primaryStage) {
 			//this.initModality(APPLICATION_MODAL);
@@ -347,7 +349,7 @@ public class Connect4View extends Application implements Observer {
 	            primaryStage.hide();
 	            try {
 	            	serverId = serverTextField.getText();
-	            	portId = portTextField.getText();
+	            	portId = Integer.parseInt(portTextField.getText());
 	            	model.reset();
 	            	circles = new ArrayList<ArrayList<Circle>>();
 					start(new Stage());
@@ -380,27 +382,35 @@ public class Connect4View extends Application implements Observer {
 	
 	private void server() {
 		try {
-			ServerSocket server = new ServerSocket(4000);
+			ServerSocket server = new ServerSocket(portId);
+			System.out.println("Server started");
 			Socket connection  = server.accept();
+			System.out.println("Connection accepted");
 			ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
-			output.writeObject(model);
-			input.readObject();
+//			output.writeObject(model);
+//			input.readObject();
+			input.close();
+			output.close();
 			connection.close();
-		} catch (IOException | ClassNotFoundException e) {
+			//server.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void client() {
 		try {
-			Socket server = new Socket("localhost", 4000);
+			Socket server = new Socket(serverId, portId);
+			System.out.println("connected");
 			ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(server.getInputStream());
-			output.writeObject(model);
-			input.readObject();
+//			output.writeObject(model);
+//			input.readObject();
+			input.close();
+			output.close();
 			server.close();
-		} catch(IOException | ClassNotFoundException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
